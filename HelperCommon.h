@@ -67,3 +67,5 @@ void parseHost(NSString* hostName, NSString** baseName, int* maskLength, int* po
 // Removes block via setting the defaults, removing the lock file, host file rules and ipfw
 // rules, unloading the org.eyebeam.SelfControl item, and deleting user caches if requested.
 void removeBlock(signed long long int controllingUID);
+
+

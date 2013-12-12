@@ -97,7 +97,7 @@
   // All of this is just code to standardize and clean up the input value.
   // This'll remove whitespace and lowercase the string.
   NSString* str = [[theObject stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
-  
+
   if([str rangeOfCharacterFromSet: [NSCharacterSet newlineCharacterSet]].location != NSNotFound) {
     // only hits LF linebreaks, but componentsSeparatedByCharacterSet won't work on 10.4
     NSArray* listComponents = [str componentsSeparatedByString: @"\n"];

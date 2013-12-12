@@ -40,12 +40,14 @@
   IBOutlet id initialWindow_;
   IBOutlet id domainListMenuItem_;
   IBOutlet id editBlacklistButton_;
+  IBOutlet NSTextField *breakMin;
   IBOutlet DomainListWindowController* domainListWindowController_;
   IBOutlet TimerWindowController* timerWindowController_;
   NSUserDefaults* defaults_;
   NSLock* refreshUILock_;
   BOOL blockIsOn;
   BOOL addingBlock;
+
 }
 
 @property (assign) BOOL addingBlock;

@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
   NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
                                [NSNumber numberWithInt: 0], @"BlockDuration",
                                [NSDate distantFuture], @"BlockStartedDate",
-                               [NSArray array], @"HostBlacklist", 
+                               [NSArray array], @"HostBlacklist",
                                [NSNumber numberWithBool: YES], @"EvaluateCommonSubdomains",
                                [NSNumber numberWithBool: YES], @"HighlightInvalidHosts",
                                [NSNumber numberWithBool: YES], @"VerifyInternetConnection",
@@ -89,7 +89,9 @@ int main(int argc, char* argv[]) {
                                [NSNumber numberWithBool: YES], @"BadgeApplicationIcon",
                                [NSNumber numberWithBool: YES], @"AllowLocalNetworks",
                                [NSNumber numberWithInt: 1440], @"MaxBlockLength",
-                               [NSNumber numberWithInt: 15], @"BlockLengthInterval",
+                               [NSNumber numberWithInt: 1], @"BlockLengthInterval",
+                               [NSNumber numberWithInt: 15], @"TimeforBreak",
+                               [NSNumber numberWithInt: 0], @"Break",
                                [NSNumber numberWithBool: NO], @"WhitelistAlertSuppress",
                                nil];
   [defaults registerDefaults:appDefaults];    
@@ -213,6 +215,8 @@ int main(int argc, char* argv[]) {
                                     [defaults objectForKey: @"BlockDuration"], @"BlockDuration",
                                     [defaults objectForKey: @"BlockStartedDate"], @"BlockStartedDate",
                                     [defaults objectForKey: @"BlockAsWhitelist"], @"BlockAsWhitelist",
+                                    [defaults objectForKey: @"Break"], @"Break",
+                                    [defaults objectForKey: @"TimeforBreak"], @"TimeforBreak",
                                     nil];        
     if([[lockDictionary objectForKey: @"HostBlacklist"] count] <= 0 || [[lockDictionary objectForKey: @"BlockDuration"] intValue] < 1
        || [lockDictionary objectForKey: @"BlockStartedDate"] == nil
@@ -263,6 +267,13 @@ int main(int argc, char* argv[]) {
       NSLog(@"WARNING: Launch daemon load returned a failure status code.");
     } else NSLog(@"INFO: Block successfully added.");
   }
+  if([modeString isEqual: @"--reset"]) {
+        // So you think you can rid yourself of SelfControl just like that?
+        NSLog(@"INFO: ");
+        printStatus(-212);
+        exit(EX_UNAVAILABLE);
+  }
+    
   if([modeString isEqual: @"--remove"]) {
     // So you think you can rid yourself of SelfControl just like that?
     NSLog(@"INFO: Nice try.");
@@ -297,6 +308,8 @@ int main(int argc, char* argv[]) {
                                         [defaults objectForKey: @"BlockDuration"], @"BlockDuration",
                                         [defaults objectForKey: @"BlockStartedDate"], @"BlockStartedDate",
                                         [defaults objectForKey: @"BlockAsWhitelist"], @"BlockAsWhitelist",
+                                        [defaults objectForKey: @"Break"], @"Break",
+                                        [defaults objectForKey: @"TimeforBreak"], @"TimeforBreak",
                                         nil];
       // And later on we'll be reloading the launchd daemon if curDictionary
       // was nil, just in case.  Watch for it.
@@ -307,6 +320,8 @@ int main(int argc, char* argv[]) {
                            [curDictionary objectForKey: @"BlockDuration"], @"BlockDuration",
                            [curDictionary objectForKey: @"BlockStartedDate"], @"BlockStartedDate",
                            [curDictionary objectForKey: @"BlockAsWhitelist"], @"BlockAsWhitelist",
+                           [curDictionary objectForKey: @"Break"], @"Break",
+                           [curDictionary objectForKey: @"TimeforBreak"], @"TimeforBreak",
                            nil];      
     }
     [defaults synchronize];
@@ -344,12 +359,49 @@ int main(int argc, char* argv[]) {
     // need to do this again even if it's only a refresh because there might be
     // caches for the new host blocked.
     clearCachesIfRequested(controllingUID);
-  } else if([modeString isEqual: @"--checkup"]) {    
-    NSDictionary* curDictionary = [NSDictionary dictionaryWithContentsOfFile: SelfControlLockFilePath];
+  } else if([modeString isEqual: @"--checkup"]) {
+      NSDictionary* curDictionary = [NSDictionary dictionaryWithContentsOfFile: SelfControlLockFilePath];
+      // Redirect NSLOG to an output file
+//      [@"" writeToFile:@"/NSLog.txt" atomically:YES encoding:NSUTF8StringEncoding error:nil];
+//      id fileHandle = [NSFileHandle fileHandleForWritingAtPath:@"/NSLog.txt"];
+//      if (!fileHandle)  NSLog(@"Opening log failed"), NSLog(@"Opening log worked");
+//      [fileHandle retain];
+      
+      // Redirect stderr
+//      int err = dup2([fileHandle fileDescriptor], STDERR_FILENO);
+//      if (!err) NSLog(@"Couldn't redirect stderr"), NSLog(@"Redirect stderr");
+      // While SelfControl is doing 1 minute checks if you scheduled for a break to happen it will check starting from this point
+      NSLog(@"About to activate schedulebreak if applicable");
+      
+      NSDate *timeNow = [[NSDate alloc] init];
+      NSDate* blockSD = [curDictionary objectForKey: @"BlockStartedDate"];
+      int timeSinceS = abs([timeNow timeIntervalSinceDate: blockSD]) / 60;
+      int blockD = [[curDictionary objectForKey: @"BlockDuration"] intValue];
+      int timeforbreak =[[curDictionary objectForKey: @"TimeforBreak"] intValue];
+      NSArray *blacklist = [curDictionary objectForKey: @"HostBlacklist"];
+
+      NSLog(@"Time Elapsed %d", timeSinceS);
+      if (timeSinceS != 0  ||  timeSinceS <= blockD) {
+          int breaks = [[curDictionary objectForKey: @"Break"] intValue];
+          
+          if( modulus( (timeSinceS - breaks), (breaks+timeforbreak) ) == 0 ) { // Schedule Break
+               NSLog(@"Schedule Break");
+              removeRulesFromFirewall(controllingUID);
+              clearCachesIfRequested(controllingUID);
+
+          } else if ( modulus( timeSinceS , (breaks+timeforbreak) ) == 0 ) { // Start Blocking
+              NSLog(@"Schedule Block");
+              addRulesToFirewall(controllingUID);
+              clearCachesIfRequested(controllingUID);
+          }
+          printStatus(-216);
+          exit(EX_SOFTWARE);
+      }
+
     
     NSDate* blockStartedDate = [curDictionary objectForKey: @"BlockStartedDate"];
     NSTimeInterval blockDuration = [[curDictionary objectForKey: @"BlockDuration"] intValue];
-    
+      
     if(blockStartedDate == nil || [[NSDate distantFuture] isEqualToDate: blockStartedDate] || blockDuration < 1) {    
       // The lock file seems to be broken.  Read from defaults, then write out a
       // new lock file while we're at it.
@@ -364,17 +416,18 @@ int main(int argc, char* argv[]) {
       seteuid(0);
       
       if(blockStartedDate == nil || blockDuration < 1) {    
-          // Defaults is broken too!  Let's get out of here!
+        // Defaults is broken too!  Let's get out of here!
         NSLog(@"ERROR: Checkup ran but no block found.  Attempting to remove block.");
-        
+
         // get rid of this block
         removeBlock(controllingUID);
-        
+          
         printStatus(-215);
         exit(EX_SOFTWARE);
       }
+        
     }
-
+      
     // convert to seconds
     blockDuration *= 60;
 

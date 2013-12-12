@@ -292,7 +292,7 @@ void removeBlock(signed long long int controllingUID) {
   [defaults synchronize];
   [NSUserDefaults resetStandardUserDefaults];
   seteuid(0);
-      
+    
   removeRulesFromFirewall(controllingUID);
   
   if(![[NSFileManager defaultManager] removeItemAtPath: SelfControlLockFilePath error: nil] && [[NSFileManager defaultManager] fileExistsAtPath: SelfControlLockFilePath]) {
@@ -309,3 +309,9 @@ void removeBlock(signed long long int controllingUID) {
   
   [LaunchctlHelper unloadLaunchdJobWithPlistAt:@"/Library/LaunchDaemons/org.eyebeam.SelfControl.plist"];  
 }
+
+
+int modulus(int B, int A) {
+    return B - (floor(B / A) * A);
+}
+

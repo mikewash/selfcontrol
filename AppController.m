@@ -36,7 +36,7 @@ NSString* const kSelfControlErrorDomain = @"SelfControlErrorDomain";
     NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
                                  [NSNumber numberWithInt: 0], @"BlockDuration",
                                  [NSDate distantFuture], @"BlockStartedDate",
-                                 [NSArray array], @"HostBlacklist", 
+                                 [NSArray array], @"HostBlacklist",
                                  [NSNumber numberWithBool: YES], @"EvaluateCommonSubdomains",
                                  [NSNumber numberWithBool: YES], @"HighlightInvalidHosts",
                                  [NSNumber numberWithBool: YES], @"VerifyInternetConnection",
@@ -48,7 +48,9 @@ NSString* const kSelfControlErrorDomain = @"SelfControlErrorDomain";
                                  [NSNumber numberWithBool: YES], @"BadgeApplicationIcon",
                                  [NSNumber numberWithBool: YES], @"AllowLocalNetworks",
                                  [NSNumber numberWithInt: 1440], @"MaxBlockLength",
-                                 [NSNumber numberWithInt: 15], @"BlockLengthInterval",
+                                 [NSNumber numberWithInt: 1], @"BlockLengthInterval",
+                                 [NSNumber numberWithInt: 15], @"TimeforBreak",
+                                 [NSNumber numberWithInt: 0], @"Break",
                                  [NSNumber numberWithBool: NO], @"WhitelistAlertSuppress",
                                  nil];
     
@@ -93,7 +95,8 @@ NSString* const kSelfControlErrorDomain = @"SelfControlErrorDomain";
 
 - (IBAction)updateTimeSliderDisplay:(id)sender {
   int numMinutes = floor([blockDurationSlider_ intValue]);
-    
+//  int breakMinutes = floor([breakMin intValue]);
+//    NSString* myNewString = [NSString stringWithFormat:@"%i", breakMinutes];
   // Time-display code cleaned up thanks to the contributions of many users
   
   NSString* timeString = @"";
@@ -118,7 +121,7 @@ NSString* const kSelfControlErrorDomain = @"SelfControlErrorDomain";
   else {
     timeString = NSLocalizedString(@"Disabled", "Shows that SelfControl is disabled");
   }
-    
+   
   [blockSliderTimeDisplayLabel_ setStringValue:timeString];
   [submitButton_ setEnabled: (numMinutes > 0) && ([[defaults_ arrayForKey:@"HostBlacklist"] count] > 0)];
 }
@@ -174,8 +177,8 @@ NSString* const kSelfControlErrorDomain = @"SelfControlErrorDomain";
     return;
   }
   
-  BOOL blockWasOn = blockIsOn;
-  blockIsOn = [self selfControlLaunchDaemonIsLoaded];
+    BOOL blockWasOn = blockIsOn;
+    blockIsOn = [self selfControlLaunchDaemonIsLoaded];
   
   if(blockIsOn) { // block is on
     if(!blockWasOn) { // if we just switched states to on...
@@ -283,9 +286,9 @@ NSString* const kSelfControlErrorDomain = @"SelfControlErrorDomain";
   NSDate* blockStartedDate = [defaults_ objectForKey: @"BlockStartedDate"];
     
   // NSDate* blockStartedDate = [defaults_ objectForKey: @"BlockStartedDate"];
-  if(blockStartedDate != nil && ![blockStartedDate isEqualToDate: [NSDate distantFuture]]) {
-    return YES;
-  }
+//  if(blockStartedDate != nil && ![blockStartedDate isEqualToDate: [NSDate distantFuture]]) {
+//    return YES;
+//  }
   
   // If there's no block in the hosts file, no defaults BlockStartedDate, and no lock-file,
   // we'll assume we're clear of blocks.  Checking ipfw would be nice but usually requires 
@@ -390,6 +393,7 @@ NSString* const kSelfControlErrorDomain = @"SelfControlErrorDomain";
     return;
   
   NSMutableArray* list = [[[defaults_ arrayForKey: @"HostBlacklist"] mutableCopy] autorelease];
+
   [list addObject: host];
   [defaults_ setObject: list forKey: @"HostBlacklist"];
   [defaults_ synchronize];

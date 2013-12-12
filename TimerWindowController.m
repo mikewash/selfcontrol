@@ -30,7 +30,7 @@
   if(self = [super init]) {
     // We need a block to prevent us from running multiple copies of the "Add to Block"
     // sheet.
-    addToBlockLock = [[NSLock alloc] init];
+      addToBlockLock = [[NSLock alloc] init];
         
     numStrikes = 0;
   }
