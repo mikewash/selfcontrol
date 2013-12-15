@@ -225,15 +225,15 @@
         <window title="SelfControl" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="451" y="331" width="620" height="111"/>
+            <rect key="contentRect" x="451" y="331" width="620" height="188"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
             <value key="minSize" type="size" width="413" height="114"/>
             <view key="contentView" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="620" height="111"/>
+                <rect key="frame" x="0.0" y="0.0" width="620" height="188"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <slider verticalHuggingPriority="750" id="465">
-                        <rect key="frame" x="18" y="41" width="584" height="25"/>
+                        <rect key="frame" x="18" y="118" width="584" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1440" doubleValue="30" tickMarkPosition="below" numberOfTickMarks="97" allowsTickMarkValuesOnly="YES" sliderType="linear" id="466">
                             <font key="font" size="12" name="Helvetica"/>
@@ -244,7 +244,7 @@
                         </connections>
                     </slider>
                     <textField verticalHuggingPriority="750" id="478">
-                        <rect key="frame" x="17" y="16" width="460" height="17"/>
+                        <rect key="frame" x="17" y="93" width="460" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="30 minutes" id="479">
                             <font key="font" metaFont="system"/>
@@ -253,7 +253,7 @@
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" id="541">
-                        <rect key="frame" x="260" y="71" width="100" height="25"/>
+                        <rect key="frame" x="260" y="153" width="100" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="roundTextured" title="Start" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" inset="2" id="542">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -264,7 +264,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="543">
-                        <rect key="frame" x="482" y="9" width="118" height="25"/>
+                        <rect key="frame" x="482" y="86" width="118" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="roundTextured" title="Edit Blacklist" bezelStyle="texturedRounded" alignment="center" borderStyle="border" inset="2" id="544">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -275,7 +275,7 @@
                         </connections>
                     </button>
                     <textField verticalHuggingPriority="750" id="gsc-fd-BNf">
-                        <rect key="frame" x="318" y="11" width="96" height="22"/>
+                        <rect key="frame" x="379" y="11" width="96" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="0" drawsBackground="YES" id="0hB-pU-DdY">
                             <font key="font" metaFont="system"/>
@@ -291,7 +291,7 @@
                         </connections>
                     </textField>
                     <textField verticalHuggingPriority="750" id="CXv-wb-afT">
-                        <rect key="frame" x="152" y="11" width="96" height="22"/>
+                        <rect key="frame" x="379" y="43" width="96" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="0" drawsBackground="YES" id="PEP-43-og1">
                             <font key="font" metaFont="system"/>
@@ -305,6 +305,33 @@
                                 </dictionary>
                             </binding>
                         </connections>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="9Tl-40-zsQ">
+                        <rect key="frame" x="177" y="43" width="162" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Time before break starts:" id="dAc-1p-nQc">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="qGl-MS-Q5v">
+                        <rect key="frame" x="177" y="13" width="168" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="How long the break lasts: " id="GwK-HQ-taI">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="dzr-i8-93T">
+                        <rect key="frame" x="258" y="68" width="114" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Scheduled Breaks" id="rD7-Du-3cW">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
                     </textField>
                 </subviews>
             </view>
